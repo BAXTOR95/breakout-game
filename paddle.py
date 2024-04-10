@@ -13,7 +13,6 @@ class Paddle:
         self.paddle.penup()
         # Position the paddle at the bottom center of the screen
         self.paddle.goto(0, -screen_height / 2 + 20)
-        print('paddle created')
 
     def move_left(self):
         x = self.paddle.xcor() - 20

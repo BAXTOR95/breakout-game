@@ -18,9 +18,15 @@ class Game:
         self.bricks = []
         self.setup_bricks()
 
+        self.is_running = True
+        self.paused = False
+
         self.screen.listen()
         self.screen.onkeypress(self.paddle.move_left, "Left")
         self.screen.onkeypress(self.paddle.move_right, "Right")
+        self.screen.onkeypress(self.pause_game, "p")
+        self.screen.onkeypress(self.restart_game, "r")
+        self.screen.onkeypress(self.exit_game, "q")
 
     def setup_bricks(self):
         # Placeholder for creating and arranging bricks
@@ -30,18 +36,35 @@ class Game:
                 brick = Brick(colors[y], -380 + (x * 80), 250 - (y * 30))
                 self.bricks.append(brick)
 
+    def setup_game(self):
+        # Reset paddle and ball positions without clearing the screen
+        self.reset_bricks()
+        self.paddle.reset()
+        self.ball.reset()
+        # Rebind keys in case they were cleared
+        self.screen.listen()
+        self.screen.onkeypress(self.paddle.move_left, "Left")
+        self.screen.onkeypress(self.paddle.move_right, "Right")
+        self.screen.onkeypress(self.pause_game, "p")
+        self.screen.onkeypress(self.restart_game, "r")
+        self.screen.onkey(self.exit_game, "Escape")
+
+    def reset_bricks(self):
+        for brick in self.bricks:
+            brick.destroy()
+        self.bricks.clear()
+        self.setup_bricks()
+
     def play(self):
-        while True:
+        while self.is_running:
+            if not self.paused:
+                self.screen.update()
+                self.ball.move()
+                self.check_collisions()
+                if self.is_game_over() or self.is_game_won():
+                    break
             self.screen.update()
-            self.ball.move()
-            self.check_collisions()
-            if self.is_game_over():
-                break
-            if self.is_game_won():
-                break
-            # TODO: Implement a way to pause the game
-            # TODO: Implement a way to restart the game
-            # TODO: Implement a way to exit the game
+
             # TODO: Implement a way to display the score
             # TODO: Implement a way to display the level and level up
             # TODO: Implement a way to display the lives
@@ -68,16 +91,9 @@ class Game:
                 brick.destroy()  # Remove the brick
                 self.bricks.remove(brick)
 
-    def reset_bricks(self):
-        for brick in self.bricks:
-            brick.destroy()
-        self.bricks.clear()
-        self.setup_bricks()
-
     def is_game_over(self):
         if self.ball.get_y() < -290:
-            self.ball.reset()
-            self.reset_bricks()
+
             print('Game Over!')
             return True
         return False
@@ -87,6 +103,17 @@ class Game:
             print('You Won!')
             return True
         return False
+
+    def pause_game(self):
+        self.paused = not self.paused
+
+    def restart_game(self):
+        self.setup_game()  # Re-setup game elements without clearing the screen
+        self.play()  # Restart the game loop
+
+    def exit_game(self):
+        self.is_running = False
+        turtle.bye()
 
 
 # Initialize and run the game
