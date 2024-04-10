@@ -43,3 +43,14 @@ class Ball:
         self.ball.goto(0, 0)
         self.ball.dx = 0.2
         self.ball.dy = -0.2
+
+    def increase_speed(self, speed):
+        if self.ball.dx > 0:
+            self.ball.dx += speed
+        else:
+            self.ball.dx -= speed
+
+        if self.ball.dy > 0:
+            self.ball.dy += speed
+        else:
+            self.ball.dy -= speed
