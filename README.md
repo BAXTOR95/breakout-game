@@ -62,7 +62,7 @@ Contributions to enhance the Breakout game are welcome. Please follow these step
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](LICENSE.md) for more information.
 
 ## Acknowledgments
 
